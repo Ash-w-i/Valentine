@@ -9,9 +9,8 @@
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow-x: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; }
         
-        /* Interactive Hearts */
-        .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.3); font-size: 25px; animation: float 6s linear infinite; z-index: 1; top: -10%; cursor: pointer; user-select: none; transition: transform 0.2s; }
-        .heart-bg:active { transform: scale(1.5); color: var(--primary); }
+        /* Interactive Floating Hearts */
+        .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.4); font-size: 28px; animation: float 6s linear infinite; z-index: 1; top: -10%; cursor: pointer; user-select: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center; min-width: 100px; }
         @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
         .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; margin: 20px 0; border: 1px solid #ffafbd; }
@@ -84,7 +83,6 @@
     <div class="page" id="p5">
         <img src="us.jpg">
         <h1>I remember when you came home... 🥰</h1>
-        <p>Tap each box to reveal a memory!</p>
         <div class="hidden-gallery">
             <div class="secret-img" onclick="reveal(this, 'home1.jpg')">❓</div>
             <div class="secret-img" onclick="reveal(this, 'home2.jpg')">❓</div>
@@ -109,7 +107,9 @@
         let noCount = 0;
         let revealedCount = 0;
         const noProtests = ["No! 🛑", "Error ❌", "Try again... 🤔", "Still no 😂", "Nice try! 😋"];
-        const heartNotes = ["Love you!", "Miss you!", "You're cute!", "My Valentine!", "Forever!", "XOXO"];
+        
+        // CUSTOM MESSAGES HERE
+        const heartNotes = ["Love you!", "Miss you!", "You're cute!", "My Valentine!", "Forever!", "XOXO", "My Girl ❤️"];
 
         function createHearts() {
             for (let i = 0; i < 15; i++) {
@@ -119,14 +119,20 @@
                 heart.style.left = Math.random() * 100 + "vw";
                 heart.style.animationDelay = Math.random() * 5 + "s";
                 
-                // The Surprise Message Logic
-                heart.onclick = () => {
-                    heart.innerHTML = heartNotes[Math.floor(Math.random() * heartNotes.length)];
-                    heart.style.fontSize = "14px";
-                    heart.style.fontWeight = "bold";
+                // FIXED MESSAGE LOGIC
+                heart.onclick = function() {
+                    const randomMsg = heartNotes[Math.floor(Math.random() * heartNotes.length)];
+                    this.innerHTML = randomMsg;
+                    this.style.color = "#ff4d6d";
+                    this.style.fontSize = "16px";
+                    this.style.fontWeight = "bold";
+                    this.style.opacity = "1";
+                    
+                    // Revert after 2 seconds
                     setTimeout(() => {
-                        heart.innerHTML = "❤️";
-                        heart.style.fontSize = "25px";
+                        this.innerHTML = "❤️";
+                        this.style.fontSize = "28px";
+                        this.style.opacity = "0.4";
                     }, 2000);
                 };
                 
@@ -135,7 +141,7 @@
         }
 
         function startExperience() {
-            document.getElementById('bgMusic').play().catch(e => console.log("Audio play blocked"));
+            document.getElementById('bgMusic').play();
             nextPage(2);
         }
 
