@@ -20,7 +20,7 @@
         h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
         p { line-height: 1.6; font-size: 15px; color: #555; }
         
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3); }
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
         
         .reason-item { background: #fff0f3; margin: 10px 0; padding: 10px; border-radius: 15px; color: var(--primary); font-weight: bold; font-size: 14px; transform: scale(0); animation: popIn 0.5s forwards; }
         @keyframes popIn { to { transform: scale(1); } }
@@ -35,7 +35,7 @@
 </head>
 <body onload="createHearts()">
 
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
@@ -63,17 +63,17 @@
     </div>
 
     <div class="page" id="p4">
-        <h1>A Small Note For You...</h1>
+        <h1>A Little Note...</h1>
         <div class="note-card">
-            "I know distance is hard, but it only makes me realize how much you are worth waiting for. Every mile between us is a reminder of how strong our love is. You're my person, forever."
+            "I know distance is hard, but you are worth every mile. You're my person, forever and always. I love you more than words can say."
         </div>
-        <button class="nav-btn" onclick="nextPage(5)">Show our photo ❤️</button>
+        <button class="nav-btn" onclick="nextPage(5)">One last surprise ❤️</button>
     </div>
 
     <div class="page" id="p5">
         <img src="us.jpg">
-        <h1>Mission Accomplished! 🥰</h1>
-        <p>I love you forever and always! ❤️✨</p>
+        <h1>I love you forever! 🥰</h1>
+        <p>Mission accomplished! ❤️✨</p>
     </div>
 
     <script>
@@ -92,7 +92,8 @@
         }
 
         function startExperience() {
-            document.getElementById('bgMusic').play();
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Audio play blocked"));
             nextPage(2);
         }
 
