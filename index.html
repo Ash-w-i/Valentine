@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Our Story ❤️</title>
+    <title>For My Love ❤️</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow-x: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; }
         
-        /* Falling Hearts Background */
         .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
         @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* Card System */
         .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; margin: 20px 0; }
         .active { display: block; animation: fadeIn 0.7s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -22,28 +20,23 @@
         h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
         p { line-height: 1.6; font-size: 15px; color: #555; }
         
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3); }
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
         
-        /* Reason Items */
         .reason-item { background: #fff0f3; margin: 10px 0; padding: 10px; border-radius: 15px; color: var(--primary); font-weight: bold; font-size: 14px; transform: scale(0); animation: popIn 0.5s forwards; }
         @keyframes popIn { to { transform: scale(1); } }
 
-        /* Note Card Styling */
         .note-card { background: #fff9c4; padding: 20px; border-radius: 10px; text-align: left; font-family: 'Georgia', serif; font-style: italic; line-height: 1.5; position: relative; margin: 20px 0; border-left: 4px solid #fbc02d; }
         .note-card::after { content: "📌"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
 
-        /* Scratch-off Gallery */
         .hidden-gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
         .secret-img { width: 100%; height: 80px; background: #eee; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; overflow: hidden; }
         .revealed img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; margin-bottom: 0; }
 
-        /* Decision Buttons */
         .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; margin-top: 20px; }
         #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 100; transition: all 0.2s; }
         #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
         #noMessages { margin-top: 20px; font-size: 13px; color: #ff4d6d; font-weight: bold; }
 
-        /* Video Container */
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
@@ -71,14 +64,14 @@
     <div class="page" id="p3">
         <h1>Will you be my Valentine? ❤️</h1>
         <div class="btn-wrap">
-            <button id="yesBtn" onclick="celebrate()">YES!</button>
+            <button id="yesBtn" onclick="showNote()">YES!</button>
             <button id="noBtn" ontouchstart="moveNo()" onclick="moveNo()">No</button>
             <div id="noMessages"></div>
         </div>
     </div>
 
     <div class="page" id="p4">
-        <h1>A Small Note...</h1>
+        <h1>A Little Note...</h1>
         <div class="note-card">
             "I know distance is hard, but you are worth every mile. You're my person, forever and always. I love you more than words can say."
         </div>
@@ -103,7 +96,7 @@
             <iframe 
                 id="ytVideo"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                src="https://youtu.be/jukD55zP2X4?enablejsapi=1&rel=0" 
+                src="https://www.youtube.com/embed/jukD55zP2X4?enablejsapi=1&rel=0" 
                 allow="autoplay; encrypted-media" 
                 allowfullscreen>
             </iframe>
@@ -134,15 +127,12 @@
         }
 
         function nextPage(num) {
-            // Stop background music if she reaches the video card
-            if(num === 6) {
-                document.getElementById('bgMusic').pause();
-            }
+            if(num === 6) { document.getElementById('bgMusic').pause(); }
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('p' + num).classList.add('active');
         }
 
-        function celebrate() {
+        function showNote() {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             nextPage(4);
         }
