@@ -8,10 +8,10 @@
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
         
-        /* Card Transitions */
-        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; animation: slideIn 0.5s ease; }
-        .active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; transition: all 0.5s ease; }
+        .active { display: block; animation: slideIn 0.5s ease; }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         img { width: 100%; border-radius: 20px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
         h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
@@ -19,9 +19,11 @@
         
         .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
         
-        /* Final Page Buttons */
+        /* Note styling */
+        .note-card { background: #fff9c4; padding: 20px; border-radius: 15px; border-left: 5px solid #fbc02d; text-align: left; font-style: italic; margin: 15px 0; }
+
         .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; margin-top: 20px; }
-        #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 10; transition: all 0.2s; }
+        #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 10; }
         #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
     </style>
 </head>
@@ -33,38 +35,38 @@
 
     <div class="page active" id="p1">
         <img src="landing.jpeg">
-        <h1>Happy Valentine's Day, My Love</h1>
+        <h1>Happy Valentine's Day</h1>
         <p>"we're doing long distance, he probs didn't get me anything..."</p>
         <button class="nav-btn" onclick="startExperience()">Click to open! ❤️</button>
     </div>
 
     <div class="page" id="p2">
-        <h1>To the love of my life...</h1>
-        <p>You make my life so meaningful. I'm so lucky to have you. I love you wholeheartedly and I can't wait to see you again.</p>
-        <button class="nav-btn" onclick="nextPage(3)">Next Card ✨</button>
+        <img src="landing.jpeg" style="filter: grayscale(50%);">
+        <h1>Will you be my Valentine?</h1>
+        <div class="btn-wrap">
+            <button id="yesBtn" onclick="showNote()">YES!</button>
+            <button id="noBtn" ontouchstart="moveNo()">No</button>
+        </div>
     </div>
 
     <div class="page" id="p3">
-        <img src="https://emojicdn.elk.sh/💐">
-        <h1>Flowers For You</h1>
-        <p>I wish I could give these to you in person today. You are the best part of my life. 🌹</p>
-        <button class="nav-btn" onclick="nextPage(4)">One more thing...</button>
+        <h1>A Small Note For You...</h1>
+        <div class="note-card">
+            "Every day with you feels like a blessing, even from miles away. I wanted to make this just to show you how much you mean to me. You're my favorite person, my best friend, and I can't wait to see you soon."
+        </div>
+        <button class="nav-btn" onclick="nextPage(4)">Show our photo ❤️</button>
     </div>
 
     <div class="page" id="p4">
-        <img src="us.jpg" id="finalImg">
-        <h1 id="questionText">Will you be my Valentine?</h1>
-        <div class="btn-wrap">
-            <button id="yesBtn" onclick="celebrate()">YES!</button>
-            <button id="noBtn" ontouchstart="moveNo()">No</button>
-        </div>
+        <img src="us.jpg">
+        <h1>Yay! 🥰❤️</h1>
+        <p>I knew you'd say yes! I love you so much!</p>
     </div>
 
     <script>
         let yesSize = 18;
 
         function startExperience() {
-            // Music needs a user click to start on iPhones
             document.getElementById('bgMusic').play();
             nextPage(2);
         }
@@ -74,29 +76,22 @@
             document.getElementById('p' + num).classList.add('active');
         }
 
+        function showNote() {
+            nextPage(3);
+        }
+
         function moveNo() {
             const btn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            
-            // Make the No button run away
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
             const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             btn.style.position = 'fixed';
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
-
-            // Make Yes button grow bigger
+            
             yesSize += 20;
             yesBtn.style.fontSize = yesSize + 'px';
             yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
-        }
-
-        function celebrate() {
-            document.getElementById('p4').innerHTML = `
-                <img src="us.jpg">
-                <h1>Yay! 🥰❤️</h1>
-                <p>I love you forever! Mission accomplished!</p>
-            `;
         }
     </script>
 </body>
