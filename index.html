@@ -1,69 +1,148 @@
-<div class="btn-wrap">
-    <button id="yesBtn" onclick="nextPage(4)">YES!</button>
-    <button id="noBtn" ontouchstart="moveNo()" onclick="moveNo()">No</button>
-    <div id="noMessages" style="margin-top: 20px; font-size: 12px; color: #ff4d6d; pointer-events: none;"></div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Love ❤️</title>
+    <style>
+        :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
+        body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; }
+        
+        /* Falling Hearts */
+        .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
+        @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
-<script>
-    let yesSize = 18;
-    let noCount = 0;
-    const noProtests = [
-        "No, you can't press that!",
-        "Are you sure? Think again...",
-        "Error: 'No' is not an option.",
-        "Stop being stubborn!",
-        "I'll just keep moving it...",
-        "You're really trying, huh?",
-        "Still no.",
-        "Nice try, but no.",
-        "I can do this all day!",
-        "Click the green one instead. 😉"
-    ];
+        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; }
+        .active { display: block; animation: fadeIn 0.7s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-    function createHearts() {
-        for (let i = 0; i < 20; i++) {
-            let heart = document.createElement("div");
-            heart.innerHTML = "❤️";
-            heart.className = "heart-bg";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDelay = Math.random() * 5 + "s";
-            document.body.appendChild(heart);
+        img { width: 100%; border-radius: 20px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
+        h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
+        p { line-height: 1.6; font-size: 15px; color: #555; }
+        
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
+        
+        .reason-item { background: #fff0f3; margin: 10px 0; padding: 10px; border-radius: 15px; color: var(--primary); font-weight: bold; font-size: 14px; transform: scale(0); animation: popIn 0.5s forwards; }
+        @keyframes popIn { to { transform: scale(1); } }
+
+        .note-card { background: #fff9c4; padding: 20px; border-radius: 10px; text-align: left; font-style: italic; margin: 20px 0; border-left: 5px solid #fbc02d; position: relative; }
+        .note-card::after { content: "📌"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
+
+        .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; margin-top: 20px; }
+        #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 100; transition: all 0.2s; }
+        #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
+        
+        /* Style for the accumulated "No" messages */
+        #noMessages { margin-top: 20px; font-size: 13px; color: #ff4d6d; font-weight: bold; line-height: 1.4; }
+    </style>
+</head>
+<body onload="createHearts()">
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="page active" id="p1">
+        <img src="landing.jpeg">
+        <h1>Happy Valentine's Day ❤️</h1>
+        <p>"we're doing long distance, he probs didn't get me anything..."</p>
+        <button class="nav-btn" onclick="startExperience()">Open Your Surprise! ✨</button>
+    </div>
+
+    <div class="page" id="p2">
+        <h1>3 Things I Love About You</h1>
+        <div class="reason-item" style="animation-delay: 0.2s;">1. Your beautiful smile.</div>
+        <div class="reason-item" style="animation-delay: 0.7s;">2. Your kind heart.</div>
+        <div class="reason-item" style="animation-delay: 1.2s;">3. Your beautiful eyes.</div>
+        <button class="nav-btn" onclick="nextPage(3)">Next Card ✨</button>
+    </div>
+
+    <div class="page" id="p3">
+        <h1>Will you be my Valentine? ❤️</h1>
+        <div class="btn-wrap">
+            <button id="yesBtn" onclick="nextPage(4)">YES!</button>
+            <button id="noBtn" ontouchstart="moveNo()" onclick="moveNo()">No</button>
+            <div id="noMessages"></div>
+        </div>
+    </div>
+
+    <div class="page" id="p4">
+        <h1>A Small Note...</h1>
+        <div class="note-card">
+            "Every day with you is a gift, even from miles away. I wanted to make this just to show you how much you mean to me. You're my favorite person, my best friend, and I can't wait to see you soon."
+        </div>
+        <button class="nav-btn" onclick="nextPage(5)">One last surprise ❤️</button>
+    </div>
+
+    <div class="page" id="p5">
+        <img src="us.jpg">
+        <h1>I love you forever! 🥰</h1>
+        <p>Mission accomplished! ❤️✨</p>
+    </div>
+
+    <script>
+        let yesSize = 18;
+        let noCount = 0;
+        const noProtests = [
+            "No, you can't press that! 🛑",
+            "Are you sure? Think again... 🤔",
+            "Error: 'No' is not an option. ❌",
+            "Stop being stubborn! 😂",
+            "I'll just keep moving it... 🏃‍♂️",
+            "You're really trying, huh? 😅",
+            "Still no. 🙅‍♂️",
+            "Nice try, but no. 😋",
+            "I can do this all day! ⏳",
+            "Click the green one instead. 😉"
+        ];
+
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement("div");
+                heart.innerHTML = "❤️";
+                heart.className = "heart-bg";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDelay = Math.random() * 5 + "s";
+                document.body.appendChild(heart);
+            }
         }
-    }
 
-    function startExperience() {
-        document.getElementById('bgMusic').play().catch(e => console.log("Audio play blocked"));
-        nextPage(2);
-    }
+        function startExperience() {
+            document.getElementById('bgMusic').play().catch(e => console.log("Audio play blocked"));
+            nextPage(2);
+        }
 
-    function nextPage(num) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('p' + num).classList.add('active');
-    }
+        function nextPage(num) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('p' + num).classList.add('active');
+        }
 
-    function moveNo() {
-        const btn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const msgArea = document.getElementById('noMessages');
-        
-        // 1. Move the button
-        const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-        btn.style.position = 'fixed';
-        btn.style.left = x + 'px';
-        btn.style.top = y + 'px';
-        
-        // 2. Grow the Yes button
-        yesSize += 15;
-        yesBtn.style.fontSize = yesSize + 'px';
-        yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const msgArea = document.getElementById('noMessages');
+            
+            // 1. Move the No button
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            
+            // 2. Grow the Yes button
+            yesSize += 15;
+            yesBtn.style.fontSize = yesSize + 'px';
+            yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
 
-        // 3. Add the funny protest texts
-        let newMsg = document.createElement("p");
-        newMsg.innerHTML = noProtests[Math.min(noCount, noProtests.length - 1)];
-        newMsg.style.margin = "2px 0";
-        newMsg.style.animation = "popIn 0.3s forwards";
-        msgArea.appendChild(newMsg);
-        noCount++;
-    }
-</script>
+            // 3. Add the funny protest texts
+            if (noCount < noProtests.length) {
+                let newMsg = document.createElement("p");
+                newMsg.innerHTML = noProtests[noCount];
+                newMsg.style.margin = "2px 0";
+                msgArea.appendChild(newMsg);
+                noCount++;
+            }
+        }
+    </script>
+</body>
+</html>
