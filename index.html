@@ -9,6 +9,7 @@
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow-x: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; }
         
+        /* Falling Hearts */
         .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
         @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -80,9 +81,7 @@
         <img src="us.jpg">
         <h1>I remember when you came home... 🥰</h1>
         <p>I cherish these moments so much.</p>
-        
         <button class="nav-btn" id="revealBtn" onclick="showGallery()">Tap to see memories 📸</button>
-        
         <div class="hidden-gallery" id="gallery" style="display:none;">
             <div class="secret-img" onclick="reveal(this, 'home1.jpg')">❓</div>
             <div class="secret-img" onclick="reveal(this, 'home2.jpg')">❓</div>
@@ -92,30 +91,15 @@
     </div>
 
     <div class="page" id="p6">
-    <h1>For You ❤️</h1>
-    <div id="videoLoading" style="font-size: 12px; color: #999;">Loading your video...</div>
-    <video id="vlogVideo" controls playsinline preload="metadata" oncanplay="document.getElementById('videoLoading').style.display='none'">
-        <source src="final_video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <p>You mean everything to me. ❤️✨</p>
-</div>
+        <h1>For You ❤️</h1>
+        <div id="videoLoading" style="font-size: 12px; color: #999; margin-bottom: 10px;">Loading your video...</div>
+        <video id="vlogVideo" controls playsinline preload="metadata" oncanplay="document.getElementById('videoLoading').style.display='none'">
+            <source src="final_video.mp4" type="video/mp4">
+        </video>
+        <p>You mean everything to me. ❤️✨</p>
+    </div>
 
-<script>
-    function nextPage(num) {
-        if(num === 6) {
-            // Stop background music so it doesn't lag the audio thread
-            const bgMusic = document.getElementById('bgMusic');
-            bgMusic.pause();
-            
-            // Explicitly tell the video to start loading now
-            const video = document.getElementById('vlogVideo');
-            video.load(); 
-        }
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('p' + num).classList.add('active');
-    }
-</script>
+    <script>
         let yesSize = 18;
         let noCount = 0;
         let revealedCount = 0;
@@ -138,9 +122,10 @@
         }
 
         function nextPage(num) {
-            // Stop music if playing video
             if(num === 6) {
                 document.getElementById('bgMusic').pause();
+                const video = document.getElementById('vlogVideo');
+                video.load();
             }
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('p' + num).classList.add('active');
@@ -162,11 +147,7 @@
                 el.classList.add('revealed');
                 revealedCount++;
                 confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
-                
-                // Show final video button after all are revealed
-                if(revealedCount === 3) {
-                    document.getElementById('finalMove').style.display = 'block';
-                }
+                if(revealedCount === 3) document.getElementById('finalMove').style.display = 'block';
             }
         }
 
