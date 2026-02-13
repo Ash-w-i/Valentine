@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Love ❤️</title>
+    <title>For My Girl ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; }
         
-        /* Falling Hearts */
         .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
         @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -32,7 +32,6 @@
         #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 100; transition: all 0.2s; }
         #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
         
-        /* Style for the accumulated "No" messages */
         #noMessages { margin-top: 20px; font-size: 13px; color: #ff4d6d; font-weight: bold; line-height: 1.4; }
     </style>
 </head>
@@ -60,7 +59,7 @@
     <div class="page" id="p3">
         <h1>Will you be my Valentine? ❤️</h1>
         <div class="btn-wrap">
-            <button id="yesBtn" onclick="nextPage(4)">YES!</button>
+            <button id="yesBtn" onclick="celebrate()">YES!</button>
             <button id="noBtn" ontouchstart="moveNo()" onclick="moveNo()">No</button>
             <div id="noMessages"></div>
         </div>
@@ -117,24 +116,32 @@
             document.getElementById('p' + num).classList.add('active');
         }
 
+        function celebrate() {
+            // Confetti Blast!
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4d6d', '#ffafbd', '#ffffff']
+            });
+            nextPage(4);
+        }
+
         function moveNo() {
             const btn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const msgArea = document.getElementById('noMessages');
             
-            // 1. Move the No button
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
             const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             btn.style.position = 'fixed';
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
             
-            // 2. Grow the Yes button
             yesSize += 15;
             yesBtn.style.fontSize = yesSize + 'px';
             yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
 
-            // 3. Add the funny protest texts
             if (noCount < noProtests.length) {
                 let newMsg = document.createElement("p");
                 newMsg.innerHTML = noProtests[noCount];
