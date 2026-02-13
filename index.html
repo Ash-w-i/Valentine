@@ -7,16 +7,16 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
-        body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; }
+        body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow-x: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; }
         
         .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
         @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
 
-        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; }
+        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; margin: 20px 0; }
         .active { display: block; animation: fadeIn 0.7s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        img { width: 100%; border-radius: 20px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
+        img, video { width: 100%; border-radius: 20px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
         h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
         p { line-height: 1.6; font-size: 15px; color: #555; }
         
@@ -28,11 +28,14 @@
         .note-card { background: #fff9c4; padding: 20px; border-radius: 10px; text-align: left; font-style: italic; margin: 20px 0; border-left: 5px solid #fbc02d; position: relative; }
         .note-card::after { content: "📌"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
 
+        .hidden-gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .secret-img { width: 100%; height: 80px; background: #eee; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; overflow: hidden; }
+        .revealed img { width: 100%; height: 100%; object-fit: cover; }
+
         .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; margin-top: 20px; }
         #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 100; transition: all 0.2s; }
         #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
-        
-        #noMessages { margin-top: 20px; font-size: 13px; color: #ff4d6d; font-weight: bold; line-height: 1.4; }
+        #noMessages { margin-top: 20px; font-size: 13px; color: #ff4d6d; font-weight: bold; }
     </style>
 </head>
 <body onload="createHearts()">
@@ -68,32 +71,40 @@
     <div class="page" id="p4">
         <h1>A Small Note...</h1>
         <div class="note-card">
-            "Every day with you is a gift, even from miles away. I wanted to make this just to show you how much you mean to me. You're my favorite person, my best friend, and I can't wait to see you soon."
+            "I know distance is hard, but you are worth every mile. You're my person, forever and always. I love you more than words can say."
         </div>
-        <button class="nav-btn" onclick="nextPage(5)">One last surprise ❤️</button>
+        <button class="nav-btn" onclick="nextPage(5)">Memories of us ❤️</button>
     </div>
 
     <div class="page" id="p5">
         <img src="us.jpg">
-        <h1>I love you forever! 🥰</h1>
-        <p>Mission accomplished! ❤️✨</p>
+        <h1>I remember when you came home... 🥰</h1>
+        <p>I cherish these moments so much.</p>
+        
+        <button class="nav-btn" id="revealBtn" onclick="showGallery()">Tap to see memories 📸</button>
+        
+        <div class="hidden-gallery" id="gallery" style="display:none;">
+            <div class="secret-img" onclick="reveal(this, 'home1.jpg')">❓</div>
+            <div class="secret-img" onclick="reveal(this, 'home2.jpg')">❓</div>
+            <div class="secret-img" onclick="reveal(this, 'home3.jpg')">❓</div>
+        </div>
+        <button class="nav-btn" id="finalMove" style="display:none;" onclick="nextPage(6)">One last thing... 🎁</button>
+    </div>
+
+    <div class="page" id="p6">
+        <h1>For You ❤️</h1>
+        <video id="vlogVideo" controls playsinline>
+            <source src="final_video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p>You mean everything to me. ❤️✨</p>
     </div>
 
     <script>
         let yesSize = 18;
         let noCount = 0;
-        const noProtests = [
-            "No, you can't press that! 🛑",
-            "Are you sure? Think again... 🤔",
-            "Error: 'No' is not an option. ❌",
-            "Stop being stubborn! 😂",
-            "I'll just keep moving it... 🏃‍♂️",
-            "You're really trying, huh? 😅",
-            "Still no. 🙅‍♂️",
-            "Nice try, but no. 😋",
-            "I can do this all day! ⏳",
-            "Click the green one instead. 😉"
-        ];
+        let revealedCount = 0;
+        const noProtests = ["No! 🛑", "Error ❌", "Try again... 🤔", "Still no 😂", "Nice try! 😋"];
 
         function createHearts() {
             for (let i = 0; i < 20; i++) {
@@ -107,46 +118,59 @@
         }
 
         function startExperience() {
-            document.getElementById('bgMusic').play().catch(e => console.log("Audio play blocked"));
+            document.getElementById('bgMusic').play();
             nextPage(2);
         }
 
         function nextPage(num) {
+            // Stop music if playing video
+            if(num === 6) {
+                document.getElementById('bgMusic').pause();
+            }
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('p' + num).classList.add('active');
         }
 
         function celebrate() {
-            // Confetti Blast!
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#ff4d6d', '#ffafbd', '#ffffff']
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             nextPage(4);
+        }
+
+        function showGallery() {
+            document.getElementById('gallery').style.display = 'grid';
+            document.getElementById('revealBtn').style.display = 'none';
+        }
+
+        function reveal(el, src) {
+            if(!el.classList.contains('revealed')) {
+                el.innerHTML = `<img src="${src}">`;
+                el.classList.add('revealed');
+                revealedCount++;
+                confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+                
+                // Show final video button after all are revealed
+                if(revealedCount === 3) {
+                    document.getElementById('finalMove').style.display = 'block';
+                }
+            }
         }
 
         function moveNo() {
             const btn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const msgArea = document.getElementById('noMessages');
-            
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
             const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             btn.style.position = 'fixed';
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
-            
             yesSize += 15;
             yesBtn.style.fontSize = yesSize + 'px';
             yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
-
             if (noCount < noProtests.length) {
-                let newMsg = document.createElement("p");
-                newMsg.innerHTML = noProtests[noCount];
-                newMsg.style.margin = "2px 0";
-                msgArea.appendChild(newMsg);
+                let p = document.createElement("p");
+                p.innerHTML = noProtests[noCount];
+                msgArea.appendChild(p);
                 noCount++;
             }
         }
