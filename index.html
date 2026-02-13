@@ -3,44 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Love ❤️</title>
+    <title>Our Story ❤️</title>
     <style>
         :root { --primary: #ff4d6d; --bg: #fff0f3; --card-bg: #ffffff; }
-        body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; }
         
-        /* Smooth Transitions */
-        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .active { display: block; animation: fadeIn 0.6s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        /* Floating Hearts Background */
+        .heart-bg { position: absolute; color: rgba(255, 77, 109, 0.2); font-size: 20px; animation: float 6s linear infinite; z-index: 1; top: -10%; }
+        @keyframes float { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .page { display: none; width: 85%; max-width: 350px; background: var(--card-bg); padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; z-index: 10; }
+        .active { display: block; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
         img { width: 100%; border-radius: 20px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
         h1 { color: var(--primary); font-size: 22px; margin: 10px 0; }
         p { line-height: 1.6; font-size: 15px; color: #555; }
         
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3); }
         
-        /* Cute Note Card Styling */
-        .note-card { 
-            background: #fff9c4; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.05);
-            text-align: left; 
-            font-family: 'Georgia', serif; 
-            font-style: italic; 
-            line-height: 1.5;
-            position: relative;
-            margin: 20px 0;
-        }
+        .reason-item { background: #fff0f3; margin: 10px 0; padding: 10px; border-radius: 15px; color: var(--primary); font-weight: bold; font-size: 14px; transform: scale(0); animation: popIn 0.5s forwards; }
+        @keyframes popIn { to { transform: scale(1); } }
+
+        .note-card { background: #fff9c4; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 10px rgba(0,0,0,0.05); text-align: left; font-family: 'Georgia', serif; font-style: italic; line-height: 1.5; position: relative; margin: 20px 0; border-left: 4px solid #fbc02d; }
         .note-card::before { content: "📌"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
 
         .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; margin-top: 20px; }
-        #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 10; transition: transform 0.2s; }
+        #yesBtn { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 18px; z-index: 100; transition: all 0.2s; }
         #noBtn { background: #adb5bd; color: white; border: none; padding: 10px 30px; border-radius: 50px; position: absolute; left: 50%; transform: translateX(-50%); top: 60px; }
     </style>
 </head>
-<body>
+<body onload="createHearts()">
 
     <audio id="bgMusic" loop>
         <source src="music.mp3" type="audio/mpeg">
@@ -50,33 +43,53 @@
         <img src="landing.jpeg">
         <h1>Happy Valentine's Day ❤️</h1>
         <p>"we're doing long distance, he probs didn't get me anything..."</p>
-        <button class="nav-btn" onclick="startExperience()">Click to open! ✨</button>
+        <button class="nav-btn" onclick="startExperience()">Open Your Surprise! ✨</button>
     </div>
 
     <div class="page" id="p2">
+        <h1>3 Things I Love About You</h1>
+        <div class="reason-item" style="animation-delay: 0.2s;">1. Your beautiful smile.</div>
+        <div class="reason-item" style="animation-delay: 0.7s;">2. How you make me laugh.</div>
+        <div class="reason-item" style="animation-delay: 1.2s;">3. Your kind and caring heart.</div>
+        <button class="nav-btn" onclick="nextPage(3)">Next Card ✨</button>
+    </div>
+
+    <div class="page" id="p3">
         <h1>Will you be my Valentine?</h1>
         <div class="btn-wrap">
-            <button id="yesBtn" onclick="nextPage(3)">YES!</button>
+            <button id="yesBtn" onclick="nextPage(4)">YES!</button>
             <button id="noBtn" ontouchstart="moveNo()">No</button>
         </div>
     </div>
 
-    <div class="page" id="p3">
-        <h1>A Little Note...</h1>
+    <div class="page" id="p4">
+        <h1>A Small Note For You...</h1>
         <div class="note-card">
-            "Every day with you is a gift, even when we are miles apart. You are my greatest adventure and my favorite person in the whole world. I’m so lucky to call you mine. I love you more than words can say."
+            "I know distance is hard, but it only makes me realize how much you are worth waiting for. Every mile between us is a reminder of how strong our love is. You're my person, forever."
         </div>
-        <button class="nav-btn" onclick="nextPage(4)">Click for a surprise ❤️</button>
+        <button class="nav-btn" onclick="nextPage(5)">Show our photo ❤️</button>
     </div>
 
-    <div class="page" id="p4">
+    <div class="page" id="p5">
         <img src="us.jpg">
-        <h1>I love you forever! 🥰</h1>
-        <p>Mission accomplished! ❤️✨</p>
+        <h1>Mission Accomplished! 🥰</h1>
+        <p>I love you forever and always! ❤️✨</p>
     </div>
 
     <script>
         let yesSize = 18;
+
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement("div");
+                heart.innerHTML = "❤️";
+                heart.className = "heart-bg";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDelay = Math.random() * 5 + "s";
+                heart.style.opacity = Math.random();
+                document.body.appendChild(heart);
+            }
+        }
 
         function startExperience() {
             document.getElementById('bgMusic').play();
@@ -97,7 +110,7 @@
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
             
-            yesSize += 20;
+            yesSize += 15;
             yesBtn.style.fontSize = yesSize + 'px';
             yesBtn.style.padding = (yesSize * 0.8) + 'px ' + (yesSize * 2) + 'px';
         }
